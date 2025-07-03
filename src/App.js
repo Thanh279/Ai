@@ -16,8 +16,9 @@ function App() {
     script.textContent = `
       import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
       createChat({
-        webhookUrl: 'https://lechithanh.app.n8n.cloud/webhook/daae5d2b-6c4c-44e1-bb0f-4903dc2525eb/chat',
+        webhookUrl: 'https://lechithanh.app.n8n.cloud/webhook/a889d2ae-2159-402f-b326-5f61e90f602e/chat ',
         target : '#n8n-chat' , 
+        branding: false,
 	mode : 'window' , 
 	chatInputKey : 'chatInput' , 
 	
