@@ -1,0 +1,144 @@
+.modal-body {
+  display: flex;
+  padding: 0;
+  border-radius: 4rem;
+  font-family: 'PT Sans', sans-serif;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  border-radius: 4rem;
+  width: 120%;
+  box-shadow: -1px -2px 42px -19px rgba(0,0,0,0.74);
+}
+
+.modal-content h1, .modal-content h2, .modal-content h3 {
+  text-align: center;
+}
+
+.modal-content h1 {
+  font-size: 1.3em;
+  text-transform: uppercase;
+}
+
+.modal-content h2 {
+  font-size: 1.1em;
+}
+
+.modal-content h3 {
+  font-size: .8em;
+  letter-spacing: 4px;
+}
+
+form {
+  font-size: .8em;
+}
+
+.column {
+  flex: 50%;
+  padding: 20px;
+}
+
+.column#main {
+  flex: 75%;
+  padding: 50px;
+  margin-top: 40px;
+  margin-right: 10px;
+}
+
+#secondary {
+  background-color: #F9BC35;
+  background-color: #FFDAB9; /* changed to creamy orange */
+  width: 100vw; /* full viewport width */
+  height: 100vh; /* full viewport height */
+  border-radius: 0 4rem 4rem 0;
+  text-align: center;
+  position: fixed; /* fix to viewport */
+  top: 0;
+  right: 0;
+  z-index: -1; /* behind modal content */
+}
+
+#main .form-control {
+  border-radius: 0;
+  font-size: .9em;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 320px;
+  text-align: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.btn {
+  text-transform: uppercase;
+  border-radius: .15rem;
+  width: 200px;
+  padding: .150rem .75rem;
+  margin: 30px auto;
+  font-family: 'PT Sans', sans-serif;
+  letter-spacing: 2px;
+}
+
+.btn-primary {
+  border-color: rgba(235, 18, 18, 0);
+  background: linear-gradient(to right, #f1da36 0%, #f3c5a4 99%);
+  color: #000;
+  font-weight: 700;
+}
+
+.btn-primary:hover {
+  border-color: rgba(255, 255, 255, 0);
+  background: linear-gradient(to right, #fca86c 0%, #f1da36 99%);
+}
+
+#main .btn-primary {
+  width: 100%;
+}
+
+#secondary .btn-primary {
+  background: #f8f9fa4f;
+  color: #000;
+}
+
+.modal-body label {
+  margin-bottom: 0;
+}
+
+.sec-content {
+  margin-top: 85%;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .modal-body {
+    flex-direction: column;
+  }
+  
+  .modal-content {
+    width: 100%;
+  }
+  
+  .column#main {
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+  
+  #secondary {
+    border-radius: 0 0 4rem 4rem;
+  }
+}
