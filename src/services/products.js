@@ -13,6 +13,29 @@ export const productsApi = {
     }
   },
 
+  // Get all products with images
+  fetchProductsWithImages: async () => {
+    try {
+      const response = await fetch(apiConfig.buildUrl('/products/with-images'), apiConfig.getOptions());
+      return await apiConfig.handleResponse(response);
+    } catch (error) {
+      console.error('Error fetching products with images:', error);
+      throw error;
+    }
+  },
+
+  // Create product
+  createProduct: async (productData) => {
+    try {
+      const response = await fetch(apiConfig.buildUrl('/products'),
+        apiConfig.getOptions('POST', productData));
+      return await apiConfig.handleResponse(response);
+    } catch (error) {
+      console.error('Error creating product:', error);
+      throw error;
+    }
+  },
+
   // Get product by ID
   fetchProductById: async (id) => {
     try {
@@ -24,13 +47,26 @@ export const productsApi = {
     }
   },
 
-  // Get products by category
-  fetchProductsByCategory: async (category) => {
+  // Update product
+  updateProduct: async (id, productData) => {
     try {
-      const response = await fetch(apiConfig.buildUrl(`/products/category/${category}`), apiConfig.getOptions());
+      const response = await fetch(apiConfig.buildUrl(`/products/${id}`),
+        apiConfig.getOptions('PUT', productData));
       return await apiConfig.handleResponse(response);
     } catch (error) {
-      console.error('Error fetching products by category:', error);
+      console.error('Error updating product:', error);
+      throw error;
+    }
+  },
+
+  // Delete product
+  deleteProduct: async (id) => {
+    try {
+      const response = await fetch(apiConfig.buildUrl(`/products/${id}`),
+        apiConfig.getOptions('DELETE'));
+      return await apiConfig.handleResponse(response);
+    } catch (error) {
+      console.error('Error deleting product:', error);
       throw error;
     }
   },
@@ -42,6 +78,17 @@ export const productsApi = {
       return await apiConfig.handleResponse(response);
     } catch (error) {
       console.error('Error searching products:', error);
+      throw error;
+    }
+  },
+
+  // Get product images
+  fetchProductImages: async (id) => {
+    try {
+      const response = await fetch(apiConfig.buildUrl(`/products/${id}/images`), apiConfig.getOptions());
+      return await apiConfig.handleResponse(response);
+    } catch (error) {
+      console.error('Error fetching product images:', error);
       throw error;
     }
   },
@@ -58,39 +105,6 @@ export const productsApi = {
       return await apiConfig.handleResponse(response);
     } catch (error) {
       console.error('Error filtering products:', error);
-      throw error;
-    }
-  },
-
-  // Get product categories
-  fetchCategories: async () => {
-    try {
-      const response = await fetch(apiConfig.buildUrl('/categories'), apiConfig.getOptions());
-      return await apiConfig.handleResponse(response);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-      throw error;
-    }
-  },
-
-  // Get product attributes (sizes, colors)
-  fetchAttributes: async () => {
-    try {
-      const response = await fetch(apiConfig.buildUrl('/products/attributes'), apiConfig.getOptions());
-      return await apiConfig.handleResponse(response);
-    } catch (error) {
-      console.error('Error fetching attributes:', error);
-      throw error;
-    }
-  },
-
-  // Get all products with images
-  fetchProductsWithImages: async () => {
-    try {
-      const response = await fetch(apiConfig.buildUrl('/products/with-images'), apiConfig.getOptions());
-      return await apiConfig.handleResponse(response);
-    } catch (error) {
-      console.error('Error fetching products with images:', error);
       throw error;
     }
   }

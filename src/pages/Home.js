@@ -3,11 +3,13 @@ import { useContext, useState, useRef, useCallback } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ProductList from '../components/ProductList';
+import Banner from '../components/Banner';
+import ProductFilter from '../components/ProductFilter';
 import CartContext from '../context/CartContext';
-import useProductFetch from '../hooks/useProductFetch';
+import useProductFilter from '../hooks/useProductFilter';
 
 const Home = () => {
-  const { products, loading, error } = useProductFetch();
+  const { products, loading, error, filters, updateFilters, clearFilters, metadata } = useProductFilter();
   const { addToCart } = useContext(CartContext);
   const [isDragging, setIsDragging] = useState(false);
   const [dragDistance, setDragDistance] = useState(0);
@@ -153,54 +155,70 @@ const Home = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-orange-100 to-orange-200">
-        <div className="absolute inset-0 bg-white opacity-30"></div>
-        <div className="relative z-10 text-center px-4">
-          <h1 className="text-5xl md:text-7xl font-sans font-bold mb-6 tracking-tight text-orange-800">
-            MODERN ÉLÉGANCE
-          </h1>
-          <p className="text-xl md:text-2xl font-light mb-8 max-w-2xl mx-auto text-orange-700">
-            Discover contemporary sophistication with our modern collection
-          </p>
-          <button className="bg-orange-600 text-white px-8 py-3 font-semibold hover:bg-orange-700 transition-colors duration-200 rounded-lg">
-            EXPLORE COLLECTION
-          </button>
-        </div>
-      </section>
+      <Banner type="main" />
 
       {/* Featured Products Section */}
-      <main className="flex-1">
-        <section className="py-20 bg-orange-50">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-sans font-bold mb-4 text-orange-800">Featured Collection</h2>
+      <main className="flex-1 container mx-auto px-4 py-20">
+        {/* Benefits Section */}
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-6xl mx-auto">
+          <div className="flex flex-col items-center text-center space-y-2">
+            <img src="/icons/click_pick.svg" alt="Click & Pick" className="w-12 h-12" />
+            <h3 className="font-semibold text-sm">CLICK & PICK</h3>
+            <p className="text-xs text-gray-600">MUA ONLINE, LẤY TẠI CỬA HÀNG</p>
+          </div>
+          <div className="flex flex-col items-center text-center space-y-2">
+            <img src="/icons/warranty.svg" alt="Warranty" className="w-12 h-12" />
+            <h3 className="font-semibold text-sm">BẢO HÀNH DÂY KÉO TRỌN ĐỜI</h3>
+            <p className="text-xs text-gray-600">THAY DÂY KÉO ÁO KHOÁC MIỄN PHÍ</p>
+          </div>
+          <div className="flex flex-col items-center text-center space-y-2">
+            <img src="/icons/return.svg" alt="Return" className="w-12 h-12" />
+            <h3 className="font-semibold text-sm">ĐỔI HÀNG TRONG 30 NGÀY</h3>
+            <p className="text-xs text-gray-600">ÁP DỤNG VỚI CÁC SẢN PHẨM NGUYÊN GIÁ</p>
+          </div>
+          <div className="flex flex-col items-center text-center space-y-2">
+            <img src="/icons/delivery.svg" alt="Delivery" className="w-12 h-12" />
+            <h3 className="font-semibold text-sm">GIAO HÀNG HỎA TỐC 2H</h3>
+            <p className="text-xs text-gray-600">ÁP DỤNG VỚI ĐƠN HÀNG NỘI THÀNH</p>
+          </div>
+        </section>
+
+        {/* Main Content Section */}
+        <section className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+          {/* Filter Panel */}
+          <aside className="hidden md:block bg-white p-6 rounded-lg shadow-md sticky top-20 h-fit">
+            <ProductFilter filters={filters} updateFilters={updateFilters} clearFilters={clearFilters} metadata={metadata} />
+          </aside>
+
+          {/* Product List */}
+          <section className="md:col-span-3">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-sans font-bold mb-4 text-orange-800">Featured Collection</h2>
               <p className="text-orange-600 max-w-2xl mx-auto">
                 Curated pieces that blend modern aesthetics with timeless elegance
               </p>
             </div>
             <ProductList products={products} addToCart={addToCart} />
-          </div>
+          </section>
         </section>
 
         {/* Brand Story Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-3xl font-sans font-bold mb-6 text-orange-800">Our Story</h2>
-                <p className="text-orange-600 mb-6 leading-relaxed">
-                  Founded on the principles of modern design and exceptional craftsmanship, 
-                  we bring you contemporary fashion that stands the test of time. Each piece 
-                  is thoughtfully designed to blend sophistication with modern aesthetics.
-                </p>
-                <p className="text-orange-600 leading-relaxed">
-                  Our commitment to quality extends from our products to every aspect of 
-                  your shopping experience, ensuring modern luxury at every touchpoint.
-                </p>
-              </div>
-              <div className="bg-orange-100 h-96 rounded-lg flex items-center justify-center">
-                <span className="text-orange-400">Modern Brand Image</span>
-              </div>
+        <section className="max-w-6xl mx-auto mt-16 bg-white p-8 rounded-lg shadow-md">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl font-sans font-bold mb-6 text-orange-800">Our Story</h2>
+              <p className="text-orange-600 mb-6 leading-relaxed">
+                Founded on the principles of modern design and exceptional craftsmanship, 
+                we bring you contemporary fashion that stands the test of time. Each piece 
+                is thoughtfully designed to blend sophistication with modern aesthetics.
+              </p>
+              <p className="text-orange-600 leading-relaxed">
+                Our commitment to quality extends from our products to every aspect of 
+                your shopping experience, ensuring modern luxury at every touchpoint.
+              </p>
+            </div>
+            <div className="bg-orange-100 h-96 rounded-lg flex items-center justify-center">
+              <span className="text-orange-400">Modern Brand Image</span>
             </div>
           </div>
         </section>

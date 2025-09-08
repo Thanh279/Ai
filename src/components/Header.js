@@ -1,105 +1,92 @@
-import React, { useState } from 'react';
-import { useContext } from 'react';
-import AuthContext from '../context/AuthContext';
-import CartContext from '../context/CartContext';
+import React, { useEffect, useState } from 'react';
+import categoriesApi from '../services/categories';
 
 const Header = () => {
-  const { user, setUser } = useContext(AuthContext);
-  const { cart } = useContext(CartContext);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await categoriesApi.fetchNestedCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error('Failed to fetch nested categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   return (
-    <header className="bg-black text-white border-b border-gray-700">
+    <header>
       {/* Top bar */}
-      <div className="bg-gray-900 text-gray-400 text-sm py-2">
-        <div className="container mx-auto flex justify-between items-center px-4">
-          <span>Free shipping on orders over $200</span>
-          <div className="flex space-x-4">
-            <span>Customer Service: +1 (888) 888-8888</span>
-            <span>|</span>
-            <span>EN</span>
-          </div>
-        </div>
+      <div className="bg-black text-white text-sm py-1 flex justify-center space-x-8">
+        <span>TRONG VÒNG 2H</span>
+        <span>FREESHIP ĐƠN HÀNG TỪ 499K</span>
+        <span>GIAO HỎA TỐC TRONG VÒNG 2H</span>
       </div>
 
       {/* Main navigation */}
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex justify-between items-center">
-          {/* Logo */}
-          <a href="/" className="text-3xl font-serif font-light tracking-wider">
-            ÉLÉGANCE
-          </a>
+      <nav className="bg-white shadow-md relative">
+        <div className="container mx-auto flex items-center justify-between py-4 px-4">
+          {/* Left: Logo and categories */}
+          <div className="flex items-center space-x-8 relative group">
+            <a href="/" className="text-2xl font-bold tracking-widest text-black">
+              COUPLE TX
+            </a>
+            <div className="hidden md:flex space-x-6 font-semibold text-black relative items-center">
+              {categories.map((category) => (
+                <div key={category.id} className="relative">
+                  <a
+                    href={`/category/${category.id}`}
+                    className="hover:text-orange-600 cursor-pointer flex items-center h-full"
+                  >
+                    {category.name.toUpperCase()}
+                  </a>
+                  {/* Dropdown menu */}
+                  {category.children && category.children.length > 0 && (
+                    <div className="absolute left-0 top-full mt-2 w-48 bg-white shadow-lg border border-gray-200 rounded-md opacity-0 hover:opacity-100 invisible hover:visible transition-opacity z-50">
+                      <div className="p-4 grid grid-cols-1 gap-2">
+                        {category.children.map((child) => (
+                          <a
+                            key={child.id}
+                            href={`/category/${child.id}`}
+                            className="block text-gray-700 hover:text-orange-600"
+                          >
+                            {child.name}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8 items-center">
-            <a href="/" className="hover:text-gray-300 transition-colors duration-200">Home</a>
-            <a href="/products" className="hover:text-gray-300 transition-colors duration-200">Collection</a>
-            <a href="#" className="hover:text-gray-300 transition-colors duration-200">New Arrivals</a>
-            <a href="#" className="hover:text-gray-300 transition-colors duration-200">About</a>
-            <a href="#" className="hover:text-gray-300 transition-colors duration-200">Contact</a>
-          </nav>
-
-          {/* Right side icons */}
-          <div className="flex items-center space-x-6">
-            {/* Search */}
-            <button className="hover:text-gray-300 transition-colors duration-200">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          {/* Right: Search input, user and cart icons */}
+          <div className="flex items-center space-x-4">
+            <input
+              type="text"
+              placeholder="TÌM KIẾM..."
+              className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            <button aria-label="User account" className="focus:outline-none">
+              <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9 9 0 1118.88 6.196 9 9 0 015.12 17.804z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </button>
-
-            {/* User */}
-            {user ? (
-              <button onClick={() => setUser(null)} className="hover:text-gray-300 transition-colors duration-200">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-              </button>
-            ) : (
-              <a href="/login" className="hover:text-gray-300 transition-colors duration-200">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </a>
-            )}
-
-            {/* Cart */}
-            <a href="/cart" className="relative hover:text-gray-300 transition-colors duration-200">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 6h9M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6" />
+            <button aria-label="Shopping cart" className="focus:outline-none relative">
+              <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
+                <circle cx="7" cy="21" r="1" />
+                <circle cx="17" cy="21" r="1" />
               </svg>
-              {cart.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {cart.length}
-                </span>
-              )}
-            </a>
-
-            {/* Mobile menu button */}
-            <button 
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">0</span>
             </button>
           </div>
         </div>
-
-        {/* Mobile menu */}
-        {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-gray-700">
-            <nav className="flex flex-col space-y-3 pt-4">
-              <a href="/" className="hover:text-gray-300 transition-colors duration-200">Home</a>
-              <a href="/products" className="hover:text-gray-300 transition-colors duration-200">Collection</a>
-              <a href="#" className="hover:text-gray-300 transition-colors duration-200">New Arrivals</a>
-              <a href="#" className="hover:text-gray-300 transition-colors duration-200">About</a>
-              <a href="#" className="hover:text-gray-300 transition-colors duration-200">Contact</a>
-            </nav>
-          </div>
-        )}
-      </div>
+      </nav>
     </header>
   );
 };

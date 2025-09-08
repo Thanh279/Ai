@@ -1,22 +1,21 @@
 import apiConfig from './api';
 
-// API service for wishlist operations
-export const wishlistApi = {
-  // Get user's wishlist
-  getWishlist: async (userId) => {
+const wishlistApi = {
+  // Get user wishlist
+  fetchUserWishlist: async (userId) => {
     try {
       const response = await fetch(apiConfig.buildUrl(`/wishlist/user/${userId}`), apiConfig.getOptions());
       return await apiConfig.handleResponse(response);
     } catch (error) {
-      console.error('Error fetching wishlist:', error);
+      console.error('Error fetching user wishlist:', error);
       throw error;
     }
   },
 
-  // Add product to wishlist
+  // Add to wishlist
   addToWishlist: async (wishlistData) => {
     try {
-      const response = await fetch(apiConfig.buildUrl('/wishlist'), 
+      const response = await fetch(apiConfig.buildUrl('/wishlist'),
         apiConfig.getOptions('POST', wishlistData));
       return await apiConfig.handleResponse(response);
     } catch (error) {
@@ -25,10 +24,10 @@ export const wishlistApi = {
     }
   },
 
-  // Remove product from wishlist
-  removeFromWishlist: async (wishlistId) => {
+  // Remove from wishlist
+  removeFromWishlist: async (id) => {
     try {
-      const response = await fetch(apiConfig.buildUrl(`/wishlist/${wishlistId}`), 
+      const response = await fetch(apiConfig.buildUrl(`/wishlist/${id}`),
         apiConfig.getOptions('DELETE'));
       return await apiConfig.handleResponse(response);
     } catch (error) {
@@ -37,3 +36,5 @@ export const wishlistApi = {
     }
   }
 };
+
+export default wishlistApi;
