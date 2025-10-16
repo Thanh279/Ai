@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import categoriesApi from '../services/categories';
 
 const Header = () => {
   const [categories, setCategories] = useState([]);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -17,76 +19,174 @@ const Header = () => {
   }, []);
 
   return (
-    <header>
+    <header className="sticky top-0 z-50">
       {/* Top bar */}
-      <div className="bg-black text-white text-sm py-1 flex justify-center space-x-8">
-        <span>TRONG VÒNG 2H</span>
+      <div className="bg-black text-white text-xs py-1 flex justify-center space-x-4 md:space-x-8 overflow-x-auto whitespace-nowrap px-2">
         <span>FREESHIP ĐƠN HÀNG TỪ 499K</span>
         <span>GIAO HỎA TỐC TRONG VÒNG 2H</span>
+        <span>ĐỔI TRẢ MIỄN PHÍ 30 NGÀY</span>
+      </div>
+
+      {/* Promotional banner */}
+      <div className="bg-pink-500 text-white text-center py-2 px-4">
+        <h2 className="text-lg md:text-xl font-bold">VIETNAM WOMAN'S DAY 20.10</h2>
+        <p className="text-sm">Ưu đãi lên đến 50% cho tất cả sản phẩm</p>
       </div>
 
       {/* Main navigation */}
       <nav className="bg-white shadow-md relative">
-        <div className="container mx-auto flex items-center justify-between py-4 px-4">
-          {/* Left: Logo and categories */}
-          <div className="flex items-center space-x-8 relative group">
-            <a href="/" className="text-2xl font-bold tracking-widest text-black">
-              COUPLE TX
-            </a>
-            <div className="hidden md:flex space-x-6 font-semibold text-black relative items-center">
-              {categories.map((category) => (
-                <div key={category.id} className="relative">
-                  <a
-                    href={`/category/${category.id}`}
-                    className="hover:text-orange-600 cursor-pointer flex items-center h-full"
-                  >
-                    {category.name.toUpperCase()}
-                  </a>
-                  {/* Dropdown menu */}
-                  {category.children && category.children.length > 0 && (
-                    <div className="absolute left-0 top-full mt-2 w-48 bg-white shadow-lg border border-gray-200 rounded-md opacity-0 hover:opacity-100 invisible hover:visible transition-opacity z-50">
-                      <div className="p-4 grid grid-cols-1 gap-2">
-                        {category.children.map((child) => (
-                          <a
-                            key={child.id}
-                            href={`/category/${child.id}`}
-                            className="block text-gray-700 hover:text-orange-600"
-                          >
-                            {child.name}
-                          </a>
-                        ))}
-                      </div>
+        <div className="container mx-auto flex items-center justify-between py-3 px-4">
+          {/* Mobile menu button */}
+          <button
+            className="md:hidden focus:outline-none"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+            </svg>
+          </button>
+
+          {/* Logo */}
+          <Link to="/" className="text-2xl font-bold tracking-widest text-black">
+            COUPLE TX
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex space-x-6 font-medium text-black relative items-center">
+            {categories.map((category) => (
+              <div key={category.id} className="relative group">
+                <Link
+                  to={`/category/${category.id}`}
+                  className="hover:text-pink-500 cursor-pointer flex items-center h-full py-2"
+                >
+                  {category.name.toUpperCase()}
+                </Link>
+                {/* Dropdown menu */}
+                {category.children && category.children.length > 0 && (
+                  <div className="absolute left-0 top-full mt-0 w-48 bg-white shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div className="p-3 grid grid-cols-1 gap-1">
+                      {category.children.map((child) => (
+                        <Link
+                          key={child.id}
+                          to={`/category/${child.id}`}
+                          className="block text-sm text-gray-700 hover:text-pink-500 py-1"
+                        >
+                          {child.name}
+                        </Link>
+                      ))}
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
 
           {/* Right: Search input, user and cart icons */}
           <div className="flex items-center space-x-4">
-            <input
-              type="text"
-              placeholder="TÌM KIẾM..."
-              className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-            <button aria-label="User account" className="focus:outline-none">
-              <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A9 9 0 1118.88 6.196 9 9 0 015.12 17.804z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            <div className="relative hidden md:block">
+              <input
+                type="text"
+                placeholder="TÌM KIẾM..."
+                className="border border-gray-300 rounded-sm px-3 py-1 text-sm focus:outline-none focus:border-pink-500 w-40"
+              />
+              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 focus:outline-none">
+                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+            </div>
+            <Link to="/account" aria-label="User account" className="focus:outline-none">
+              <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-            </button>
-            <button aria-label="Shopping cart" className="focus:outline-none relative">
-              <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
-                <circle cx="7" cy="21" r="1" />
-                <circle cx="17" cy="21" r="1" />
+            </Link>
+            <Link to="/cart" aria-label="Shopping cart" className="focus:outline-none relative">
+              <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">0</span>
-            </button>
+              <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-pink-500 rounded-full">0</span>
+            </Link>
           </div>
         </div>
+
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-white border-t border-gray-200 py-2 px-4">
+            <div className="flex flex-col space-y-2">
+              {categories.map((category) => (
+                <div key={category.id} className="py-2 border-b border-gray-100">
+                  <Link
+                    to={`/category/${category.id}`}
+                    className="block font-medium text-gray-800 hover:text-pink-500"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {category.name.toUpperCase()}
+                  </Link>
+                  {category.children && category.children.length > 0 && (
+                    <div className="mt-1 ml-4 grid grid-cols-1 gap-1">
+                      {category.children.map((child) => (
+                        <Link
+                          key={child.id}
+                          to={`/category/${child.id}`}
+                          className="block text-sm text-gray-600 hover:text-pink-500 py-1"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {child.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+              <div className="relative py-2">
+                <input
+                  type="text"
+                  placeholder="TÌM KIẾM..."
+                  className="w-full border border-gray-300 rounded-sm px-3 py-2 text-sm focus:outline-none focus:border-pink-500"
+                />
+                <button className="absolute right-3 top-1/2 transform -translate-y-1/2 focus:outline-none">
+                  <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
+
+      {/* Service highlights */}
+      <div className="bg-white border-t border-gray-100 py-2 hidden md:block">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-center space-x-8 text-xs text-gray-600">
+            <div className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span>ĐẶT HÀNG ONLINE</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <span>GỌI NGAY 1900 1001</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span>TÌM CỬA HÀNG</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              <span>KIỂM TRA ĐƠN HÀNG</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
   );
 };
