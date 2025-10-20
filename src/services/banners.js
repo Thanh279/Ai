@@ -1,6 +1,6 @@
 import apiConfig from './api';
 
-const bannersApi = {
+export const bannersApi = {
   // Get all banners
   fetchBanners: async () => {
     try {
@@ -115,5 +115,3 @@ const bannersApi = {
     }
   }
 };
-
-export default bannersApi;

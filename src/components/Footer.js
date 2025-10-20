@@ -1,14 +1,20 @@
 import React from 'react';
+import '../styles/Footer.css';
 
 const Footer = () => (
-  <footer className="bg-gray-900 text-white p-6 mt-auto">
-    <div className="container mx-auto text-center">
-      <p>© B2C E-commerce. All rights reserved.</p>
-      <div className="mt-2 space-x-4">
-        <a href="#" className="text-gray-400 hover:text-white">About</a>
-        <a href="#" className="text-gray-400 hover:text-white">Contact</a>
-      </div>
+  <footer className="footer">
+    <div className="footer-links">
+      <a href="#">Về chúng tôi</a>
+      <a href="#">Tuyển dụng</a>
+      <a href="#">Liên hệ</a>
+      <a href="#">Hệ thống cửa hàng</a>
     </div>
+    <div className="social-icons">
+      <a href="#">FB</a>
+      <a href="#">IG</a>
+      <a href="#">YT</a>
+    </div>
+    <p>© 2023 COUPLE TX. All rights reserved.</p>
   </footer>
 );
 

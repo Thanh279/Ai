@@ -107,5 +107,38 @@ export const productsApi = {
       console.error('Error filtering products:', error);
       throw error;
     }
+  },
+
+  // Get best sellers
+  fetchBestSellers: async () => {
+    try {
+      const response = await fetch(apiConfig.buildUrl('/products/best-sellers'), apiConfig.getOptions());
+      return await apiConfig.handleResponse(response);
+    } catch (error) {
+      console.error('Error fetching best sellers:', error);
+      throw error;
+    }
+  },
+
+  // Get outlet products
+  fetchOutletProducts: async () => {
+    try {
+      const response = await fetch(apiConfig.buildUrl('/products/outlet'), apiConfig.getOptions());
+      return await apiConfig.handleResponse(response);
+    } catch (error) {
+      console.error('Error fetching outlet products:', error);
+      throw error;
+    }
+  },
+
+  // Get products by category
+  fetchProductsByCategory: async (categoryId) => {
+    try {
+      const response = await fetch(apiConfig.buildUrl(`/products/category/${categoryId}`), apiConfig.getOptions());
+      return await apiConfig.handleResponse(response);
+    } catch (error) {
+      console.error('Error fetching products by category:', error);
+      throw error;
+    }
   }
 };

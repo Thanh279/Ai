@@ -1,6 +1,6 @@
 import apiConfig from './api';
 
-const categoriesApi = {
+export const categoriesApi = {
   // Get all categories
   fetchCategories: async () => {
     try {
@@ -70,5 +70,3 @@ const categoriesApi = {
     }
   }
 };
-
-export default categoriesApi;

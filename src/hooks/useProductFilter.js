@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { productsApi } from '../services/products';
-import categoriesApi from '../services/categories';
+import { categoriesApi } from '../services/categories';
 import brandsApi from '../services/brands';
 import sizesApi from '../services/sizes';
 import colorsApi from '../services/colors';

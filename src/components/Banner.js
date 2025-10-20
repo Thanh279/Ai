@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import bannersApi from '../services/banners';
+import  {bannersApi} from '../services/banners';
 
 const Banner = ({ type = 'main' }) => {
   const [banners, setBanners] = useState([]);
