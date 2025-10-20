@@ -125,7 +125,7 @@ const Home = () => {
     return (
       <div 
         ref={containerRef}
-        className="min-h-screen flex flex-col transition-transform duration-200 ease-out cursor-grab active:cursor-grabbing"
+        className="min-h-screen flex flex-col transition-transform duration-200 ease-out"
       >
         <Header />
         <main className="container mx-auto py-8 flex-1 flex items-center justify-center">
@@ -143,7 +143,7 @@ const Home = () => {
     return (
       <div 
         ref={containerRef}
-        className="min-h-screen flex flex-col transition-transform duration-200 ease-out cursor-grab active:cursor-grabbing"
+        className="min-h-screen flex flex-col transition-transform duration-200 ease-out "
       >
         <Header />
         <main className="container mx-auto py-8 flex-1 flex items-center justify-center">
@@ -159,7 +159,7 @@ const Home = () => {
   return (
     <div 
       ref={containerRef}
-      className="min-h-screen flex flex-col transition-transform duration-200 ease-out cursor-grab active:cursor-grabbing"
+      className="min-h-screen flex flex-col transition-transform duration-200 ease-out"
     >
       <Header />
       

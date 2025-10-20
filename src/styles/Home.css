@@ -273,14 +273,7 @@
   margin: 20px 0;
 }
 
-.app-stores button {
-  padding: 10px 20px;
-  background-color: #000;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+
 
 .app-stores button:hover {
   background-color: #333;
