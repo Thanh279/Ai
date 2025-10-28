@@ -1,25 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { bannersApi } from '../services/banners';
+import { productsApi } from '../services/products';
 import '../styles/Home.css';
 
 const AdditionalBanners = () => {
   const [banners, setBanners] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBanners = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await bannersApi.fetchActiveBannersByType('additional');
-        setBanners(data);
+
+        // Fetch banners
+        const bannerData = await bannersApi.fetchActiveBannersByType('additional');
+
+        // Fetch featured products for dynamic content
+        const productData = await productsApi.fetchProducts();
+
+        setBanners(bannerData);
+        setProducts(productData.slice(0, 2)); // Get first 2 products for banners
       } catch (error) {
-        console.error('Error fetching additional banners:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBanners();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -30,17 +39,28 @@ const AdditionalBanners = () => {
     );
   }
 
-  // If no banners, show default content
+  // If no banners, show dynamic content from products
   if (!banners || banners.length === 0) {
+    const leftProduct = products[0];
+    const rightProduct = products[1];
+
     return (
       <section className="banner-section">
         <div className="banner-left">
-          <h2>ÁO POLO CAO CẤP →</h2>
-          <div className="product-img"></div>
+          <h2>{leftProduct ? `${leftProduct.name} →` : 'ÁO POLO CAO CẤP →'}</h2>
+          {leftProduct && leftProduct.images && leftProduct.images.length > 0 ? (
+            <img src={leftProduct.images[0]} alt={leftProduct.name} className="product-img" />
+          ) : (
+            <div className="product-img"></div>
+          )}
         </div>
         <div className="banner-right">
-          <h2>ÁO KHOÁC THỜI TRANG →</h2>
-          <div className="product-img"></div>
+          <h2>{rightProduct ? `${rightProduct.name} →` : 'ÁO KHOÁC THỜI TRANG →'}</h2>
+          {rightProduct && rightProduct.images && rightProduct.images.length > 0 ? (
+            <img src={rightProduct.images[0]} alt={rightProduct.name} className="product-img" />
+          ) : (
+            <div className="product-img"></div>
+          )}
         </div>
       </section>
     );

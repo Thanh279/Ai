@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import  {bannersApi} from '../services/banners';
+import { motion, AnimatePresence } from 'framer-motion';
+import { bannersApi } from '../services/banners';
 
 const Banner = ({ type = 'main' }) => {
   const [banners, setBanners] = useState([]);
@@ -59,31 +60,53 @@ const Banner = ({ type = 'main' }) => {
   return (
     <div className="relative h-64 md:h-96 overflow-hidden">
       {/* Banner Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
-        style={{
-          backgroundImage: `url(${currentBanner.imageUrl})`,
-        }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentIndex}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${currentBanner.imageUrl || (currentBanner.images && currentBanner.images.length > 0 ? currentBanner.images[0].url : currentBanner.image)})`,
+          }}
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        </motion.div>
+      </AnimatePresence>
 
       {/* Banner Content */}
       <div className="relative z-10 h-full flex items-center justify-center text-center px-4">
         <div className="max-w-4xl">
-          <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
+          <motion.h1
+            className="text-3xl md:text-5xl font-bold text-white mb-4"
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             {currentBanner.title}
-          </h1>
-          <p className="text-lg md:text-xl text-white mb-6 max-w-2xl mx-auto">
+          </motion.h1>
+          <motion.p
+            className="text-lg md:text-xl text-white mb-6 max-w-2xl mx-auto"
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
             {currentBanner.description}
-          </p>
+          </motion.p>
           {currentBanner.targetUrl && (
-            <a
+            <motion.a
               href={currentBanner.targetUrl}
               className="inline-block bg-orange-600 text-white px-8 py-3 font-semibold hover:bg-orange-700 transition-colors duration-200 rounded-lg"
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               Shop Now
-            </a>
+            </motion.a>
           )}
         </div>
       </div>
@@ -95,9 +118,8 @@ const Banner = ({ type = 'main' }) => {
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-3 h-3 rounded-full transition-colors ${
-                index === currentIndex ? 'bg-white' : 'bg-white bg-opacity-50'
-              }`}
+              className={`w-3 h-3 rounded-full transition-colors ${index === currentIndex ? 'bg-white' : 'bg-white bg-opacity-50'
+                }`}
             />
           ))}
         </div>

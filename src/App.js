@@ -5,7 +5,11 @@ import {
   Routes,
   Navigate,
 } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { authApi } from './services/auth';
 import Home from './pages/Home';
+import AllProducts from './pages/AllProducts';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import LoginPage from './pages/Login';
@@ -20,14 +24,49 @@ import { WishlistProvider } from './context/WishlistContext';
 import './styles/App.css';
 
 const App = () => {
-  const [user, setUser] = React.useState(null);
-  const [cart, setCart] = React.useState([]);
-  const addToCart = (product) => setCart((prev) => [...prev, product]);
-  const removeFromCart = (id) => setCart((prev) => prev.filter((item) => item.id !== id));
+  const [user, setUser] = React.useState(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+  const [cart, setCart] = React.useState({}); // Object with product id as key
+  const addToCart = (product) => {
+    setCart((prev) => {
+      const newCart = { ...prev };
+      if (newCart[product.id]) {
+        newCart[product.id] = { ...newCart[product.id], quantity: newCart[product.id].quantity + 1 };
+      } else {
+        newCart[product.id] = { ...product, quantity: 1 };
+      }
+      return newCart;
+    });
+  };
+  const removeFromCart = (id) => setCart((prev) => {
+    const newCart = { ...prev };
+    delete newCart[id];
+    return newCart;
+  });
+  const updateQuantity = (id, quantity) => {
+    if (quantity <= 0) {
+      removeFromCart(id);
+    } else {
+      setCart((prev) => ({
+        ...prev,
+        [id]: { ...prev[id], quantity }
+      }));
+    }
+  };
+
+  // Initialize user from localStorage on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   // Giữ tương thích hashchange
   useEffect(() => {
-    const handleHashChange = () => {};
+    const handleHashChange = () => { };
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
@@ -70,8 +109,29 @@ const App = () => {
 
 
 
-  const authValue = { user, setUser };
-  const cartValue = { cart, addToCart, removeFromCart };
+  const login = async (credentials) => {
+    try {
+      const data = await authApi.login(credentials);
+      setUser(data.user);
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await authApi.logout();
+      setUser(null);
+    } catch (error) {
+      // Still clear user state even if API call fails
+      setUser(null);
+      throw error;
+    }
+  };
+
+  const authValue = { user, setUser, login, logout };
+  const cartValue = { cart, addToCart, removeFromCart, updateQuantity };
 
   return (
     <AuthContext.Provider value={authValue}>
@@ -81,6 +141,7 @@ const App = () => {
             <div className="App">
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/all-products" element={<AllProducts />} />
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/checkout" element={<CheckoutPage />} />
                 <Route path="/login" element={<LoginPage />} />
@@ -92,6 +153,17 @@ const App = () => {
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>
               <div id="n8n-chat"></div>
+              <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
             </div>
           </Router>
         </WishlistProvider>

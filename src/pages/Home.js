@@ -1,5 +1,6 @@
 import React from 'react';
 import { useContext, useState, useRef, useCallback } from 'react';
+import { motion, useInView } from 'framer-motion';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Banner from '../components/Banner';
@@ -25,6 +26,30 @@ const Home = () => {
   const dragStartY = useRef(0);
   const containerRef = useRef(null);
 
+  // Scroll-triggered animation refs
+  const servicesRef = useRef(null);
+  const categoriesRef = useRef(null);
+  const bannerSectionRef = useRef(null);
+  const bestSellersRef = useRef(null);
+  const additionalBannersRef = useRef(null);
+  const outletRef = useRef(null);
+  const aoThunRef = useRef(null);
+  const quanShortsRef = useRef(null);
+  const mixMatchRef = useRef(null);
+  const appDownloadRef = useRef(null);
+
+  // In-view hooks for scroll animations
+  const servicesInView = useInView(servicesRef, { once: true, margin: "-100px" });
+  const categoriesInView = useInView(categoriesRef, { once: true, margin: "-100px" });
+  const bannerSectionInView = useInView(bannerSectionRef, { once: true, margin: "-100px" });
+  const bestSellersInView = useInView(bestSellersRef, { once: true, margin: "-100px" });
+  const additionalBannersInView = useInView(additionalBannersRef, { once: true, margin: "-100px" });
+  const outletInView = useInView(outletRef, { once: true, margin: "-100px" });
+  const aoThunInView = useInView(aoThunRef, { once: true, margin: "-100px" });
+  const quanShortsInView = useInView(quanShortsRef, { once: true, margin: "-100px" });
+  const mixMatchInView = useInView(mixMatchRef, { once: true, margin: "-100px" });
+  const appDownloadInView = useInView(appDownloadRef, { once: true, margin: "-100px" });
+
   const handleDragStart = useCallback((clientY) => {
     setIsDragging(true);
     dragStartY.current = clientY;
@@ -33,10 +58,10 @@ const Home = () => {
 
   const handleDragMove = useCallback((clientY) => {
     if (!isDragging) return;
-    
+
     const distance = clientY - dragStartY.current;
     setDragDistance(distance);
-    
+
     // Add visual feedback based on drag direction
     if (containerRef.current) {
       const opacity = Math.min(0.3, Math.abs(distance) / 100);
@@ -48,15 +73,15 @@ const Home = () => {
 
   const handleDragEnd = useCallback(() => {
     if (!isDragging) return;
-    
+
     setIsDragging(false);
-    
+
     // Reset styles with smooth transition
     if (containerRef.current) {
       containerRef.current.style.transition = 'all 0.3s ease';
       containerRef.current.style.opacity = '1';
       containerRef.current.style.transform = 'scale(1)';
-      
+
       // Remove transition after animation completes
       setTimeout(() => {
         if (containerRef.current) {
@@ -64,7 +89,7 @@ const Home = () => {
         }
       }, 300);
     }
-    
+
     setDragDistance(0);
   }, [isDragging]);
 
@@ -103,7 +128,7 @@ const Home = () => {
     container.addEventListener('touchstart', handleTouchStart);
     container.addEventListener('touchmove', handleTouchMove);
     container.addEventListener('touchend', handleTouchEnd);
-    
+
     // Mouse events
     container.addEventListener('mousedown', handleMouseDown);
     container.addEventListener('mousemove', handleMouseMove);
@@ -123,7 +148,7 @@ const Home = () => {
 
   if (loading) {
     return (
-      <div 
+      <div
         ref={containerRef}
         className="min-h-screen flex flex-col transition-transform duration-200 ease-out"
       >
@@ -141,7 +166,7 @@ const Home = () => {
 
   if (error) {
     return (
-      <div 
+      <div
         ref={containerRef}
         className="min-h-screen flex flex-col transition-transform duration-200 ease-out "
       >
@@ -157,47 +182,76 @@ const Home = () => {
   }
 
   return (
-    <div 
+    <motion.div
       ref={containerRef}
       className="min-h-screen flex flex-col transition-transform duration-200 ease-out"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
     >
       <Header />
-      
+
       {/* Hero Section */}
-      <Banner type="main" />
+      <motion.div
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.1 }}
+      >
+        <Banner type="main" />
+      </motion.div>
 
       {/* Services */}
-      <Services />
+      <div ref={servicesRef}>
+        <Services />
+      </div>
 
       {/* Categories */}
-      <Categories />
+      <div ref={categoriesRef}>
+        <Categories />
+      </div>
 
       {/* Banner Section */}
-      <BannerSection />
+      <div ref={bannerSectionRef}>
+        <BannerSection />
+      </div>
 
       {/* Best Sellers */}
-      <BestSellers />
+      <div ref={bestSellersRef}>
+        <BestSellers />
+      </div>
 
       {/* Additional Banners */}
-      <AdditionalBanners />
+      <div ref={additionalBannersRef}>
+        <AdditionalBanners />
+      </div>
 
       {/* Outlet */}
-      <OutletSection />
+      <div ref={outletRef}>
+        <OutletSection />
+      </div>
 
       {/* Ao Thun Section */}
-      <ProductSection title="ÁO THUN" category="t-shirt" />
+      <div ref={aoThunRef}>
+        <ProductSection title="ÁO THUN" category="t-shirt" />
+      </div>
 
       {/* Quan Shorts Section */}
-      <ProductSection title="QUẦN SHORTS" category="shorts" />
+      <div ref={quanShortsRef}>
+        <ProductSection title="QUẦN SHORTS" category="shorts" />
+      </div>
 
       {/* Mix & Match */}
-      <MixMatch />
+      <div ref={mixMatchRef}>
+        <MixMatch />
+      </div>
 
       {/* App Download */}
-      <AppDownload />
+      <div ref={appDownloadRef}>
+        <AppDownload />
+      </div>
 
       <Footer />
-    </div>
+    </motion.div>
   );
 };
 
